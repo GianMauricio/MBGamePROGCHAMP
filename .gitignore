@@ -2,14 +2,14 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Mm]emoryCaptures/
-/ProjectSettings/
+Mobigam_Programming_Challenge/[Ll]ibrary/
+Mobigam_Programming_Challenge/[Tt]emp/
+Mobigam_Programming_Challenge/[Oo]bj/
+Mobigam_Programming_Challenge/[Bb]uild/
+Mobigam_Programming_Challenge/[Bb]uilds/
+Mobigam_Programming_Challenge/[Ll]ogs/
+Mobigam_Programming_Challenge/[Mm]emoryCaptures/
+Mobigam_Programming_Challenge/ProjectSettings/
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
