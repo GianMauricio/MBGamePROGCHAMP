@@ -9,6 +9,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     public int CurrentLife = 3;
     public int MaxLife = 3;
     public int CurrentScore = 0;
+    private int currLimit;
 
     /// <summary>
     /// Target Sequence of notes to be done by the player
@@ -89,6 +90,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     {
         GetRandomSequence(1);
         time_limiter = 0;
+        currLimit = 2;
     }
 
 
@@ -99,7 +101,12 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         CurrentTime += Time.fixedDeltaTime;
         if(CurrentTime >= MaxTime)
         {
+            GetRandomSequence(currLimit);
             CurrentTime = 0;
+            if (currLimit < 7)
+            {
+                currLimit++;
+            }
         }
 
         //TODO: Invert if
