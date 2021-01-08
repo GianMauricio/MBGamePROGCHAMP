@@ -165,12 +165,13 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                 }
             }
 
-            time_limiter = 2.0f;
+            time_limiter = 0.5f;
         }
 
         else
         {
             time_limiter -= Time.deltaTime;
+           // Debug.Log(time_limiter);
         }
     }
 
@@ -373,8 +374,9 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             Debug.Log("Origin set");
         }
 
-        else if (aFingerTouch.phase == TouchPhase.Ended)
+        if (aFingerTouch.phase == TouchPhase.Ended)
         {
+            Debug.Log("Initial Firing Swipe");
             end_pos = aFingerTouch.position;
 
             if (gesture_time <= _swipeProperty.MaxGestureTime && Vector2.Distance(start_pos, end_pos) >=

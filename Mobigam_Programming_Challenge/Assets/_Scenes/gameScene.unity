@@ -1555,10 +1555,10 @@ MonoBehaviour:
   Sequence_History: {fileID: 851085807}
   Noel: {fileID: 596256699}
   _swipeProperty:
-    MinSwipeDistance: 0.8
+    MinSwipeDistance: 0.25
     MaxGestureTime: 0.7
   _spreadProperty:
-    MinDistanceChange: 0.3
+    MinDistanceChange: 0.2
   _rotateProperty:
     MinDistance: 0.75
     MinChange: 0.4
