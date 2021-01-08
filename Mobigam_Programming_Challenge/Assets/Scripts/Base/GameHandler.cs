@@ -241,21 +241,25 @@ public class GameHandler : MonoBehaviour, ISwiped
         if (args.Direction == Directions.UP)
         {
             //Create the note based on the swipe direction
+            Debug.Log("Up");
             AddHistoryNote(Notes.SWIPE_UP);
         }
 
         else if (args.Direction == Directions.DOWN)
         {
+            Debug.Log("Down");
             AddHistoryNote(Notes.SWIPE_DOWN);
         }
 
         else if (args.Direction == Directions.LEFT)
         {
+            Debug.Log("Left");
             AddHistoryNote(Notes.SWIPE_LEFT);
         }
 
         else if (args.Direction == Directions.RIGHT)
         {
+            Debug.Log("Right");
             AddHistoryNote(Notes.SWIPE_RIGHT);
         }
     }
@@ -314,12 +318,12 @@ public class GameHandler : MonoBehaviour, ISwiped
         {
             if (diff.x > 0)
             {
-                Debug.Log("Right");
+              // Debug.Log("Right");
                 dir = Directions.RIGHT;
             }
             else
             {
-                Debug.Log("Left");
+              //  Debug.Log("Left");
                 dir = Directions.LEFT;
             }
         }
@@ -327,13 +331,13 @@ public class GameHandler : MonoBehaviour, ISwiped
         {
             if (diff.y > 0)
             {
-                Debug.Log("up");
+             //   Debug.Log("up");
                 dir = Directions.UP;
             }
 
             else
             {
-                Debug.Log("down");
+            //    Debug.Log("down");
                 dir = Directions.DOWN;
             }
         }
