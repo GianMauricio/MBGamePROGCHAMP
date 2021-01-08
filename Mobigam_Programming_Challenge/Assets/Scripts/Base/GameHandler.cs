@@ -334,13 +334,13 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
         {
             if (diff.y > 0)
             {
-             //   Debug.Log("up");
+                //Debug.Log("up");
                 dir = Directions.UP;
             }
 
             else
             {
-            //    Debug.Log("down");
+                //Debug.Log("down");
                 dir = Directions.DOWN;
             }
         }
