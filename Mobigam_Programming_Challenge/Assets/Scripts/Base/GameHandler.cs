@@ -100,6 +100,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
             CurrentTime = 0;
         }
 
+        //TODO: Invert if
         if (Input.touchCount > 0)
         {
             //Swipe gesture
@@ -107,6 +108,23 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
             {
                 Debug.Log("One Touch detected");
                 setTouchOrigin();
+            }
+
+            else if (Input.touchCount > 1)
+            {
+                if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
+                {
+                    Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
+                    Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
+
+                    float currDistance = Vector2.Distance(aFingerTouch.position, bFingerTouch.position);
+                    float prevDistance = Vector2.Distance(prevPoint1, prevPoint2);
+
+                    if (Mathf.Abs(currDistance - prevDistance) >= (_spreadProperty.MinDistanceChange * Screen.dpi))
+                    {
+                        FireSpreadEvent(currDistance - prevDistance);
+                    }
+                }
             }
         }
     }
@@ -233,6 +251,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
     ///Main game play functions
     public void OnSwipe(SwipeEventArgs args)
     {
+        //TODO: Convert to Switch
         //Get the direction of the swipe
         if (args.Direction == Directions.UP)
         {
@@ -262,12 +281,29 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
 
     public void OnPinchSpread(SpreadEventArgs args)
     {
+        //TODO:Convert to Tern
+        if (args.DistanceDiff > 0)
+        {
+            //Spawn spread note
+            AddHistoryNote(Notes.SPREAD);
+        }
 
+        else
+        {
+            //spawn pinch note
+            AddHistoryNote(Notes.PINCH);
+        }
     }
 
     ///uTiLiTy fUnCtiOnS LMAO
-    //Set touch params
-    public void setTouchOrigin()
+    
+    private Vector2 GetPreviousPoint(Touch t)
+    {
+        return t.position - t.deltaPosition;
+    }
+
+//Set touch params
+public void setTouchOrigin()
     {
         aFingerTouch = Input.GetTouch(0);
         
@@ -303,6 +339,12 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
         }
 
         return hitObj;
+    }
+
+    private Vector2 GetMidPoint(Vector2 p1, Vector2 p2)
+    {
+        Vector2 ret = new Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+        return ret;
     }
 
     //Procc swipe input
@@ -354,4 +396,31 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
     }
 
     //Procc pucker
+    private void FireSpreadEvent(float dist_diff)
+    {
+        Debug.Log("Spread");
+
+        if (dist_diff > 0)
+        {
+            Debug.Log("Spread");
+        }
+
+        else
+        {
+            Debug.Log("Pinch");
+        }
+
+        Vector2 midPoint = GetMidPoint(aFingerTouch.position, bFingerTouch.position);
+
+        GameObject hitObj = GetHit(midPoint);
+
+        SpreadEventArgs args = new SpreadEventArgs(aFingerTouch, bFingerTouch, dist_diff, hitObj);
+
+        if (PinchSpreadArgs != null)
+        {
+            PinchSpreadArgs(this, args);
+        }
+
+        this.OnPinchSpread(args);
+    }
 }

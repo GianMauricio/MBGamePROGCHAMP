@@ -163,8 +163,6 @@ public class GestureManager : MonoBehaviour
     private Vector2 GetPreviousPoint(Touch t)
     {
         return t.position - t.deltaPosition;
-
-       
     }
 
     private Vector2 GetMidPoint (Vector2 p1, Vector2 p2)
