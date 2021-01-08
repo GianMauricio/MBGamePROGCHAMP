@@ -32,7 +32,6 @@ public class GestureManager : MonoBehaviour
 
     private void Awake()
     {
-
         if (Instance == null)
         {
             Instance = this;
@@ -41,7 +40,6 @@ public class GestureManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-
     }
 
     void start()

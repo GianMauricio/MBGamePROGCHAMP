@@ -10,7 +10,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
     public int MaxLife = 3;
     public int CurrentScore = 0;
 
-
     /// <summary>
     /// Target Sequence of notes to be done by the player
     /// </summary>
@@ -235,7 +234,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
     public void OnSwipe(SwipeEventArgs args)
     {
         //Get the direction of the swipe
-        //TODO:Make the swipe only process one swipe
         if (args.Direction == Directions.UP)
         {
             //Create the note based on the swipe direction
