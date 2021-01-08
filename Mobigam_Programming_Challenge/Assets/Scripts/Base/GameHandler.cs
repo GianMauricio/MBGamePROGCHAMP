@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GameHandler : MonoBehaviour
 {
@@ -59,11 +60,24 @@ public class GameHandler : MonoBehaviour
     /// </summary>
     private List<GameObject> currentNotes_History = new List<GameObject>();
 
+    /// <summary>
+    /// All variables below will hold touch logic of varying types
+    /// </summary>
+    private Touch aFingerTouch;
+    private Touch bFingerTouch;
+    private Touch cFingerTouch;
+
+    //Swipe
+    public SwipeProperty _swipeProperty;
+    public event EventHandler<SwipeEventArgs> OnSwipe;
+
     private void Start()
     {
         GetRandomSequence(1);
     }
 
+
+    //Creating touch logic here
     private void FixedUpdate()
     {
         //Count down
@@ -71,6 +85,19 @@ public class GameHandler : MonoBehaviour
         if(CurrentTime >= MaxTime)
         {
             CurrentTime = 0;
+        }
+
+        if (Input.touchCount > 0)
+        {
+            //Swipe gesture
+            if (Input.touchCount == 1)
+            {
+                aFingerTouch = Input.GetTouch(0);
+                if (aFingerTouch.phase == TouchPhase.Moved)
+                {
+
+                }
+            }
         }
     }
 
@@ -132,6 +159,7 @@ public class GameHandler : MonoBehaviour
             {
                 Noel.SetTrigger("Attack");
             }
+
             else
             {
                 Noel.SetTrigger("Hurt");
@@ -168,12 +196,20 @@ public class GameHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Call NoteScript to create a new note based on enum
+    /// </summary>
+    /// <param name="note"></param>
     private void SpawnTargetNote(Notes note)
     {
         GameObject spawn = NoteScript.SpawnNote(NotePrefab, Sequence_Holder, note);
         currentNotes_Holder.Add(spawn);
     }
 
+    /// <summary>
+    /// Clear all currently active notes in a note holder game object
+    /// </summary>
+    /// <param name="note_holder"></param>
     public void ClearNotes(List<GameObject> note_holder)
     {
         for(int i = 0; i < note_holder.Count; i++)
