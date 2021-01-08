@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 {
@@ -10,6 +11,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     public int MaxLife = 3;
     public int CurrentScore = 0;
     private int currLimit;
+    private int PrevScore;
+    private bool gameActive;
 
     /// <summary>
     /// Target Sequence of notes to be done by the player
@@ -48,7 +51,9 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// <summary>
     /// Game character- reacts if you pressed the correct note in the sequence or not
     /// </summary>
+    [Header("Game Objects")]
     public Animator Noel;
+    public GameObject GameoverUI;
 
     /// <summary>
     /// Current prefabs in the Sequence holder
@@ -91,6 +96,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         GetRandomSequence(1);
         time_limiter = 0;
         currLimit = 2;
+        gameActive = true;
     }
 
 
@@ -98,7 +104,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private void FixedUpdate()
     {
         //Count down
-        CurrentTime += Time.fixedDeltaTime;
+        if(gameActive) CurrentTime += Time.fixedDeltaTime;
         if(CurrentTime >= MaxTime)
         {
             GetRandomSequence(currLimit);
@@ -111,17 +117,20 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             {
                 CurrentLife--;
             }
-
             else
             {
                 //TODO:End Game + Save Score + Send Notif
                 if(CurrentLife > 0) CurrentLife--;
                 KillNoel();
+                GameOver();
             }
+
+            //TODO:(Remove this) Debug score increment
+            CurrentScore += 10;
         }
 
         //TODO: Invert if
-        if (Input.touchCount > 0 && time_limiter <= 9)
+        if (Input.touchCount > 0 && time_limiter <= 0)
         {
             //Swipe gesture
             if (Input.touchCount == 1)
@@ -183,7 +192,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                 }
             }
             
-            time_limiter = 10;
+            time_limiter = 1;
         }
 
         else
@@ -519,5 +528,36 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         }
 
         this.onRotate(args);
+    }
+
+    //TODO: Program shake
+
+    //Game over functions
+    public void GameOver()
+    {
+        //stop timer
+        gameActive = false;
+
+        //Summon game over UI
+        GameoverUI.SetActive(true);
+    }
+
+    public void Replay()
+    {
+        currLimit = 2;
+        GetRandomSequence(1);
+
+        gameActive = true;
+        CurrentLife = 3;
+        PrevScore = CurrentScore;
+        CurrentScore = 0;
+        ReviveNoel();
+
+        GameoverUI.SetActive(false);
+    }
+
+    public void Leave()
+    {
+        SceneManager.LoadScene("MenuScene");
     }
 }
