@@ -165,12 +165,12 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                 }
             }
 
-            time_limiter = 10000.0f;
+            time_limiter = 2.0f;
         }
 
-        else if (Input.touchCount > 0)
+        else
         {
-            time_limiter -= 1.0f;
+            time_limiter -= Time.deltaTime;
         }
     }
 
