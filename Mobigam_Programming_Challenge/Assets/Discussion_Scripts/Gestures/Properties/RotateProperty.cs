@@ -5,5 +5,5 @@ using UnityEngine;
 public class RotateProperty 
 {
     public float MinDistance = 0.75f;
-    public float MinChange = 0.4f;
+    public float MinChange = 1.0f;
 }

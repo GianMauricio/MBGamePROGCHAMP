@@ -83,10 +83,12 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private Vector2 end_pos;
 
     private float gesture_time;
+    private float time_limiter;
 
     private void Start()
     {
         GetRandomSequence(1);
+        time_limiter = 0;
     }
 
 
@@ -101,7 +103,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         }
 
         //TODO: Invert if
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && time_limiter <= 0)
         {
             //Swipe gesture
             if (Input.touchCount == 1)
@@ -132,6 +134,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                     }
                 }
 
+                //TODO: Invert if
                 if ((aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved) &&
                     Vector2.Distance(aFingerTouch.position, bFingerTouch.position) >= (_rotateProperty.MinDistance * Screen.dpi))
                 {
@@ -161,6 +164,13 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                     }
                 }
             }
+
+            time_limiter = 10000.0f;
+        }
+
+        else if (Input.touchCount > 0)
+        {
+            time_limiter -= 1.0f;
         }
     }
 

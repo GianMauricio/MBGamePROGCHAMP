@@ -4,5 +4,5 @@ using UnityEngine;
 [System.Serializable]
 public class SpreadProperty 
 {
-    public float MinDistanceChange = 0.3f;
+    public float MinDistanceChange = 1.0f;
 }

@@ -44,11 +44,11 @@ public class GestureManager : MonoBehaviour
 
     void start()
     {
-
     }
 
     void Update()
     {
+
         if (Input.touchCount > 0)
         {
             if (Input.touchCount == 1) {

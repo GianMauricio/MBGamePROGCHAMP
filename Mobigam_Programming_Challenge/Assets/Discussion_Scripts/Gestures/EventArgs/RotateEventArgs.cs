@@ -19,7 +19,7 @@ public class RotateEventArgs : EventArgs
 
     public GameObject HitObject { get; private set; }
 
-    public RotateEventArgs(Touch f1, Touch f2, float A,RotationDirections dir, GameObject obj)
+    public RotateEventArgs(Touch f1, Touch f2, float A, RotationDirections dir, GameObject obj)
     {
         Finger1 = f1;
         Finger2 = f2;
