@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class GameHandler : MonoBehaviour
+public class GameHandler : MonoBehaviour, ISwiped
 {
     [Header("Game Vars")]
     public int CurrentLife = 3;
@@ -63,13 +63,29 @@ public class GameHandler : MonoBehaviour
     /// <summary>
     /// All variables below will hold touch logic of varying types
     /// </summary>
+
+    //Touch params
+    public SwipeProperty _swipeProperty;
+    public TwoFingerPanProperty _twoFingerPan;
+    public SpreadProperty _spreadProperty;
+    public RotateProperty _rotateProperty;
+
+    //Event params
+    public event EventHandler<SwipeEventArgs> SwipeArgs;
+    public event EventHandler<TwoFingerPanEventArgs> TwoFingerPanArgs;
+    public event EventHandler<SpreadEventArgs> PinchSpreadArgs;
+    public event EventHandler<RotateEventArgs> RotateArgs;
+
+    //TouchData
     private Touch aFingerTouch;
     private Touch bFingerTouch;
     private Touch cFingerTouch;
 
-    //Swipe
-    public SwipeProperty _swipeProperty;
-    public event EventHandler<SwipeEventArgs> OnSwipe;
+    //Dynamic touch data
+    private Vector2 start_pos;
+    private Vector2 end_pos;
+
+    private float gesture_time;
 
     private void Start()
     {
@@ -92,11 +108,8 @@ public class GameHandler : MonoBehaviour
             //Swipe gesture
             if (Input.touchCount == 1)
             {
-                aFingerTouch = Input.GetTouch(0);
-                if (aFingerTouch.phase == TouchPhase.Moved)
-                {
-
-                }
+                Debug.Log("One Touch detected");
+                setTouchOrigin();
             }
         }
     }
@@ -117,7 +130,7 @@ public class GameHandler : MonoBehaviour
 
         for(int i = 0; i < limit; i++)
         {
-            TargetSequence[i] = (Notes)Random.Range(0,8);
+            TargetSequence[i] = (Notes)UnityEngine.Random.Range(0,8);
         }
 
         SpawnTargetSequence();
@@ -218,5 +231,127 @@ public class GameHandler : MonoBehaviour
         }
 
         note_holder.Clear();
+    }
+
+    ///Main game play functions
+    public void OnSwipe(SwipeEventArgs args)
+    {
+        //Get the direction of the swipe
+        //TODO:Make the swipe only process one swipe
+        if (args.Direction == Directions.UP)
+        {
+            //Create the note based on the swipe direction
+            AddHistoryNote(Notes.SWIPE_UP);
+        }
+
+        else if (args.Direction == Directions.DOWN)
+        {
+            AddHistoryNote(Notes.SWIPE_DOWN);
+        }
+
+        else if (args.Direction == Directions.LEFT)
+        {
+            AddHistoryNote(Notes.SWIPE_LEFT);
+        }
+
+        else if (args.Direction == Directions.RIGHT)
+        {
+            AddHistoryNote(Notes.SWIPE_RIGHT);
+        }
+    }
+
+    ///uTiLiTy fUnCtiOnS LMAO
+    //Set touch params
+    public void setTouchOrigin()
+    {
+        aFingerTouch = Input.GetTouch(0);
+        
+        if (aFingerTouch.phase == TouchPhase.Began)
+        {
+            start_pos = aFingerTouch.position;
+            gesture_time = 0;
+            Debug.Log("Origin set");
+        }
+
+        if (aFingerTouch.phase == TouchPhase.Ended)
+        {
+            end_pos = aFingerTouch.position;
+
+            if (gesture_time <= _swipeProperty.MaxGestureTime && Vector2.Distance(start_pos, end_pos) >=
+                (_swipeProperty.MinSwipeDistance * Screen.dpi))
+            {
+                FireSwipeFunction();
+            }
+        }
+    }
+
+    //Smacc object via raycast
+    private GameObject GetHit(Vector2 screenPos)
+    {
+        Ray r = Camera.main.ScreenPointToRay(start_pos);
+        RaycastHit hit = new RaycastHit();
+        GameObject hitObj = null;
+
+        if (Physics.Raycast(r, out hit, Mathf.Infinity))
+        {
+            hitObj = hit.collider.gameObject;
+        }
+
+        return hitObj;
+    }
+
+    //Procc swipe input
+    private void FireSwipeFunction()
+    {
+        Debug.Log("SWIPE");
+
+        Vector2 diff = end_pos - start_pos;
+
+        GameObject hitObject = GetHit(start_pos);
+        Directions dir;
+
+        if (Mathf.Abs(diff.x) > Mathf.Abs(diff.y))
+        {
+            if (diff.x > 0)
+            {
+                Debug.Log("Right");
+                dir = Directions.RIGHT;
+            }
+            else
+            {
+                Debug.Log("Left");
+                dir = Directions.LEFT;
+            }
+        }
+        else
+        {
+            if (diff.y > 0)
+            {
+                Debug.Log("up");
+                dir = Directions.UP;
+            }
+
+            else
+            {
+                Debug.Log("down");
+                dir = Directions.DOWN;
+            }
+        }
+
+        SwipeEventArgs args = new SwipeEventArgs(start_pos, diff, dir, hitObject);
+
+        if (SwipeArgs != null)
+        {
+            SwipeArgs(this, args);
+        }
+
+        if (hitObject != null)
+        {
+            ISwiped iSwipe = hitObject.GetComponent<ISwiped>();
+            if (iSwipe != null)
+            {
+                iSwipe.OnSwipe(args);
+            }
+        }
     }
 }

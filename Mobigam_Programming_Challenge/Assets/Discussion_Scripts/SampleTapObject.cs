@@ -29,15 +29,7 @@ public class SampleTapObject : MonoBehaviour, ITapped,ISwiped,IDragged,IPinchSpr
     public void OnSwipe(SwipeEventArgs args)
     {
         Vector3 move_dir = Vector3.zero;
-        /*
-        switch (args.Direction)
-        {
-            case Directions.UP:move_dir.y = 1; break;
-            case Directions.DOWN: move_dir.y = -1;  break;
-            case Directions.LEFT: move_dir.x = -1;  break;
-            case Directions.RIGHT: move_dir.x = 1;  break;
-
-        }*/
+        
         move_dir = args.RawDirection.normalized;
 
         TargetPosition = TargetPosition + (move_dir * 5);

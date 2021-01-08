@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public enum Directions { 
-
+public enum Directions {
     UP,DOWN,LEFT,RIGHT
 }
 
@@ -20,7 +19,6 @@ public class SwipeEventArgs : EventArgs
         rawDirection = rawDir;
         direction = dir;
         hitObject = hit;
-    
     }
 
     public Vector2 SwipePosition

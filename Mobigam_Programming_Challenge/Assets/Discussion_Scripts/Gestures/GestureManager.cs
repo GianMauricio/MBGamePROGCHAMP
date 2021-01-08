@@ -142,20 +142,12 @@ public class GestureManager : MonoBehaviour
         if (gesture_finger.phase == TouchPhase.Ended)
         {
             end_pos = gesture_finger.position;
-            /*
-              if (gesture_time <= _tapProperty.tapTime &&
-          Vector2.Distance(start_pos, end_pos) <= (_tapProperty.tapDistance * Screen.dpi))
-          {
-              FireTapEvent();
-          }
 
-             if (gesture_time <= _swipeProperty.MaxGestureTime && Vector2.Distance(start_pos, end_pos) >= (_swipeProperty.MinSwipeDistance * Screen.dpi))
-          {
-              FireSwipeFunction();
-          }*/
-
-             
-
+            if (gesture_time <= _swipeProperty.MaxGestureTime && Vector2.Distance(start_pos, end_pos) >=
+                (_swipeProperty.MinSwipeDistance * Screen.dpi))
+            {
+                FireSwipeFunction();
+            }
         }
 
         else
@@ -167,9 +159,6 @@ public class GestureManager : MonoBehaviour
                 //FireDragFunction();
             }
         }
-
-
-
     }
 
 
