@@ -11,7 +11,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     public int MaxLife = 3;
     public int CurrentScore = 0;
     private int currLimit;
-    private int PrevScore;
+    public int PrevScore;
     private bool gameActive;
 
     /// <summary>
@@ -546,6 +546,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     {
         currLimit = 2;
         GetRandomSequence(1);
+        CurrentTime = 0;
 
         gameActive = true;
         CurrentLife = 3;

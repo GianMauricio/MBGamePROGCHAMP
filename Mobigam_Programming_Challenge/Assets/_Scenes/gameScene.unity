@@ -1885,10 +1885,11 @@ MonoBehaviour:
   CurrentLife: 3
   MaxLife: 3
   CurrentScore: 0
+  PrevScore: 0
   TargetSequence: 00000000020000000200000003000000040000000600000003000000
   HistorySequence: 
   CurrentTime: 0
-  MaxTime: 10
+  MaxTime: 1
   NotePrefab: {fileID: 8912903995512835158, guid: b0a7b52174b3208498a84c114f90ae53,
     type: 3}
   Sequence_Holder: {fileID: 858116173}
@@ -2605,6 +2606,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameHandler: {fileID: 1547217790}
   scoreText: {fileID: 2080522853}
+  prevScore: {fileID: 635780741}
 --- !u!1 &2080522851
 GameObject:
   m_ObjectHideFlags: 0

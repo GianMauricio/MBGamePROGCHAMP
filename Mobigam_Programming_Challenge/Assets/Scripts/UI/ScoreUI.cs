@@ -7,10 +7,12 @@ public class ScoreUI : MonoBehaviour
 {
     public GameHandler gameHandler;
     public Text scoreText;
+    public Text prevScore;
 
     // Update is called once per frame
     void Update()
     {
         scoreText.text = gameHandler.CurrentScore.ToString();
+        prevScore.text = gameHandler.PrevScore.ToString();
     }
 }
