@@ -115,6 +115,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                 Debug.Log("Double touch detected");
                 if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
                 {
+                    Debug.Log("Pinch/Spread starts");
                     Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
                     Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
 
@@ -123,6 +124,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
                     if (Mathf.Abs(currDistance - prevDistance) >= (_spreadProperty.MinDistanceChange * Screen.dpi))
                     {
+                        Debug.Log("Firing spread ev");
                         FireSpreadEvent(currDistance - prevDistance);
                     }
                 }
@@ -407,8 +409,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     //Procc pucker
     private void FireSpreadEvent(float dist_diff)
     {
-        Debug.Log("Spread");
-
+        //TODO: Convert to tern
         if (dist_diff > 0)
         {
             Debug.Log("Spread");
