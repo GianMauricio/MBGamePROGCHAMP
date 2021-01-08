@@ -33,9 +33,10 @@ public class NotifsHandler : MonoBehaviour
         string msg = score.ToString();
 
         //Timeline
-        System.DateTime deployNotifTime = System.DateTime.Now.AddSeconds(10);
+        System.DateTime deployNotifTime = System.DateTime.Now.AddSeconds(2);
 
         //Notif go pewpew
         AndroidNotification newNotif = new AndroidNotification(header, msg, deployNotifTime);
+        AndroidNotificationCenter.SendNotification(newNotif, "Proggers");
     }
 }
