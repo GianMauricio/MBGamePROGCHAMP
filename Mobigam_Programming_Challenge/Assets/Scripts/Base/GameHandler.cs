@@ -302,8 +302,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
         return t.position - t.deltaPosition;
     }
 
-//Set touch params
-public void setTouchOrigin()
+    //Set touch params
+    public void setTouchOrigin()
     {
         aFingerTouch = Input.GetTouch(0);
         
@@ -314,7 +314,7 @@ public void setTouchOrigin()
             Debug.Log("Origin set");
         }
 
-        if (aFingerTouch.phase == TouchPhase.Ended)
+        else if (aFingerTouch.phase == TouchPhase.Ended)
         {
             end_pos = aFingerTouch.position;
 
