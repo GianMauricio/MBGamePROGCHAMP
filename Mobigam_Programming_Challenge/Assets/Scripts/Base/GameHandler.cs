@@ -115,6 +115,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             else
             {
                 //TODO:End Game + Save Score + Send Notif
+                if(CurrentLife > 0) CurrentLife--;
                 KillNoel();
             }
         }
