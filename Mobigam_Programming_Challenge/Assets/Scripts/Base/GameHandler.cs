@@ -54,6 +54,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     [Header("Game Objects")]
     public Animator Noel;
     public GameObject GameoverUI;
+    public NotifsHandler Annoyance;
 
     /// <summary>
     /// Current prefabs in the Sequence holder
@@ -555,6 +556,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         ReviveNoel();
 
         GameoverUI.SetActive(false);
+
+        Annoyance.SendScoreNotif(PrevScore);
     }
 
     public void Leave()
