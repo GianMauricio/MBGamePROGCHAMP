@@ -7,7 +7,6 @@ public class SampleTapObject : MonoBehaviour, ITapped,ISwiped,IDragged,IPinchSpr
     public Vector3 TargetPosition;
     public float speed = 10f;
 
-
     public void OnEnable() {
 
         TargetPosition = transform.position;
@@ -43,7 +42,6 @@ public class SampleTapObject : MonoBehaviour, ITapped,ISwiped,IDragged,IPinchSpr
         transform.position = point;
         TargetPosition = point;
     }
-
 
     public float scaleSpeed = 5f;
     public void OnPinchSpread(SpreadEventArgs args)

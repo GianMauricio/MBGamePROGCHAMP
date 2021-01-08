@@ -301,7 +301,15 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
     public void onRotate(RotateEventArgs args)
     {
+        if (args.RotationDirection == RotationDirections.CCW)
+        {
+            AddHistoryNote(Notes.ROT_CCW);
+        }
 
+        else if (args.RotationDirection == RotationDirections.CW)
+        {
+            AddHistoryNote(Notes.ROT_CW);
+        }
     }
 
     ///uTiLiTy fUnCtiOnS LMAO
