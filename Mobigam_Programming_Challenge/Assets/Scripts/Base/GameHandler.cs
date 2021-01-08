@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class GameHandler : MonoBehaviour, ISwiped
+public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
 {
     [Header("Game Vars")]
     public int CurrentLife = 3;
@@ -66,13 +66,11 @@ public class GameHandler : MonoBehaviour, ISwiped
 
     //Touch params
     public SwipeProperty _swipeProperty;
-    public TwoFingerPanProperty _twoFingerPan;
     public SpreadProperty _spreadProperty;
     public RotateProperty _rotateProperty;
 
     //Event params
     public event EventHandler<SwipeEventArgs> SwipeArgs;
-    public event EventHandler<TwoFingerPanEventArgs> TwoFingerPanArgs;
     public event EventHandler<SpreadEventArgs> PinchSpreadArgs;
     public event EventHandler<RotateEventArgs> RotateArgs;
 
@@ -264,6 +262,11 @@ public class GameHandler : MonoBehaviour, ISwiped
         }
     }
 
+    public void OnPinchSpread(SpreadEventArgs args)
+    {
+
+    }
+
     ///uTiLiTy fUnCtiOnS LMAO
     //Set touch params
     public void setTouchOrigin()
@@ -352,10 +355,7 @@ public class GameHandler : MonoBehaviour, ISwiped
         if (hitObject != null)
         {
             ISwiped iSwipe = hitObject.GetComponent<ISwiped>();
-            if (iSwipe != null)
-            {
-                iSwipe.OnSwipe(args);
-            }
+            iSwipe.OnSwipe(args);
         }
     }
 }
