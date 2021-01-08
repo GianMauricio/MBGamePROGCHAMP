@@ -107,6 +107,16 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             {
                 currLimit++;
             }
+            if (CurrentLife > 1)
+            {
+                CurrentLife--;
+            }
+
+            else
+            {
+                //TODO:End Game + Save Score + Send Notif
+                KillNoel();
+            }
         }
 
         //TODO: Invert if
