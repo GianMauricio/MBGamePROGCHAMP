@@ -131,6 +131,35 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                         FireSpreadEvent(currDistance - prevDistance);
                     }
                 }
+
+                if ((aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved) &&
+                    Vector2.Distance(aFingerTouch.position, bFingerTouch.position) >= (_rotateProperty.MinDistance * Screen.dpi))
+                {
+                    Debug.Log("Rotation detected");
+                    Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
+                    Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
+
+                    Vector2 diff_vector = aFingerTouch.position - bFingerTouch.position;
+                    Vector2 prev_diff_vector = prevPoint1 - prevPoint2;
+
+                    float angle = Vector2.Angle(prev_diff_vector, diff_vector);
+                    if (angle >= _rotateProperty.MinChange)
+                    {
+                        Vector3 cross = Vector3.Cross(prev_diff_vector, diff_vector);
+
+                        if (cross.z > 0)
+                        {
+                            FireRotateEvent(angle, RotationDirections.CCW);
+                            Debug.Log($"Rotate Counter Cw{angle}");
+                        }
+
+                        else if (cross.z < 0)
+                        {
+                            FireRotateEvent(angle, RotationDirections.CW);
+                            Debug.Log($"Rotate CW {angle}");
+                        }
+                    }
+                }
             }
         }
     }
