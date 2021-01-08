@@ -121,7 +121,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         }
 
         //TODO: Invert if
-        if (Input.touchCount > 0 && time_limiter <= 0)
+        if (Input.touchCount > 0 && time_limiter <= 9)
         {
             //Swipe gesture
             if (Input.touchCount == 1)
@@ -183,7 +183,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                 }
             }
             
-            time_limiter = 10000;
+            time_limiter = 10;
         }
 
         else
