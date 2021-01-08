@@ -110,8 +110,9 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
                 setTouchOrigin();
             }
 
-            else if (Input.touchCount > 1)
+            else
             {
+                Debug.Log("Double crash detected");
                 if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
                 {
                     Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
@@ -281,6 +282,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
 
     public void OnPinchSpread(SpreadEventArgs args)
     {
+        Debug.Log("Pinch/Spread detected");
         //TODO:Convert to Tern
         if (args.DistanceDiff > 0)
         {
