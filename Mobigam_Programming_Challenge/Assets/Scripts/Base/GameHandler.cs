@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
+public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 {
     [Header("Game Vars")]
     public int CurrentLife = 3;
@@ -112,7 +112,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
 
             else
             {
-                Debug.Log("Double crash detected");
+                Debug.Log("Double touch detected");
                 if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
                 {
                     Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
@@ -297,8 +297,12 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
         }
     }
 
+    public void onRotate(RotateEventArgs args)
+    {
+
+    }
+
     ///uTiLiTy fUnCtiOnS LMAO
-    
     private Vector2 GetPreviousPoint(Touch t)
     {
         return t.position - t.deltaPosition;
@@ -427,5 +431,22 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
         }
 
         this.OnPinchSpread(args);
+    }
+
+    //Procc spin
+    private void FireRotateEvent(float angle, RotationDirections dir)
+    {
+        Vector2 midPoint = GetMidPoint(aFingerTouch.position, bFingerTouch.position);
+
+        GameObject hitObj = GetHit(midPoint);
+
+        RotateEventArgs args = new RotateEventArgs(aFingerTouch, bFingerTouch, angle, dir, hitObj);
+
+        if (RotateArgs != null)
+        {
+            RotateArgs(this, args);
+        }
+
+        this.onRotate(args);
     }
 }
