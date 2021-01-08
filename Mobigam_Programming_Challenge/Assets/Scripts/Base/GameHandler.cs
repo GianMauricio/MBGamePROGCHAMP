@@ -303,6 +303,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
     }
 
     //Set touch params
+    //TODO:(Delete this) from CheckSingleFingerGesture()
     public void setTouchOrigin()
     {
         aFingerTouch = Input.GetTouch(0);
@@ -324,6 +325,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
                 FireSwipeFunction();
             }
         }
+
+        else gesture_time += Time.deltaTime;
     }
 
     //Smacc object via raycast
