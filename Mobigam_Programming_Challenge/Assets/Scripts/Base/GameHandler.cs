@@ -352,10 +352,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread
             SwipeArgs(this, args);
         }
 
-        if (hitObject != null)
-        {
-            ISwiped iSwipe = hitObject.GetComponent<ISwiped>();
-            iSwipe.OnSwipe(args);
-        }
+        this.OnSwipe(args);
     }
 }
