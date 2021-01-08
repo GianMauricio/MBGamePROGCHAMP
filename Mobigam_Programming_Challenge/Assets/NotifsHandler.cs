@@ -11,7 +11,7 @@ public class NotifsHandler : MonoBehaviour
         string ChID = "Proggers";
         string title = "Score Champ";
         Importance importance = Importance.Default;
-        string desc = "Poggy notifs through channel";
+        string desc = "Proggy notifs through channel";
 
         //Notif panel struct
         AndroidNotificationChannel ch = new AndroidNotificationChannel(ChID, title, desc, importance);
