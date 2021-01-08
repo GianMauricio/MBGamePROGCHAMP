@@ -112,6 +112,9 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
             else
             {
+                aFingerTouch = Input.GetTouch(0);
+                bFingerTouch = Input.GetTouch(1);
+
                 Debug.Log("Double touch detected");
                 if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
                 {

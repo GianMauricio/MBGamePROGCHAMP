@@ -15,7 +15,6 @@ public class SampleTapObject : MonoBehaviour, ITapped,ISwiped,IDragged,IPinchSpr
 
     private void Update()
     {
-
         transform.position = Vector3.MoveTowards(transform.position, TargetPosition, speed * Time.deltaTime);
     }
 
