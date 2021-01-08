@@ -6,7 +6,7 @@ using UnityEngine;
 public class SwipeProperty 
 {
     public float MinSwipeDistance = 0.8f;
-    public float MaxGestureTime = 999.0f;
+    public float MaxGestureTime = 1.0f;
 
 
 }
