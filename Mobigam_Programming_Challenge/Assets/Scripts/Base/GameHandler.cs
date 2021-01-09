@@ -171,10 +171,9 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         } //Shake
     }*/
 
-    //Creating touch logic here
-    private void Update()
+    //Timer logic stays here Uw U
+    private void FixedUpdate()
     {
-        //Count down
         if (gameActive)
         {
             CurrentTime += Time.fixedDeltaTime;
@@ -208,7 +207,15 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                     hasShakeys = false;
                 }
             }
+        }
+    }
 
+    //Creating touch logic here
+    private void Update()
+    {
+        //Count down
+        if (gameActive)
+        {
             float shakeCheckx = Input.acceleration.x;
             if (Mathf.Abs(shakeCheckx) >= shakeLimit)
             {
