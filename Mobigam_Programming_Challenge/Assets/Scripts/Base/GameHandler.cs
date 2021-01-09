@@ -13,6 +13,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private int currLimit;
     public int PrevScore;
     private bool gameActive;
+    public float shakeLimit = 0.2f;
+    private bool hasShakeys;
 
     /// <summary>
     /// Target Sequence of notes to be done by the player
@@ -54,6 +56,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     [Header("Game Objects")]
     public Animator Noel;
     public GameObject GameoverUI;
+    public GameObject TapButton;
     public NotifsHandler Annoyance;
 
     /// <summary>
@@ -83,7 +86,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     //TouchData
     private Touch aFingerTouch;
     private Touch bFingerTouch;
-    private Touch cFingerTouch;
 
     //Dynamic touch data
     private Vector2 start_pos;
@@ -92,28 +94,86 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private float gesture_time;
     private float time_limiter;
 
+    private float tapTimer;
     private void Start()
     {
-        GetRandomSequence(1);
+        currLimit = 1;
+        GetRandomSequence(currLimit);
         time_limiter = 0;
-        currLimit = 2;
         gameActive = true;
+
+        tapTimer = MaxTime - (MaxTime * 0.25f);
+        hasShakeys = false;
     }
 
+    //TODO:(Delete this) Debug functions for PC based testing
+    private void Update()
+    {
+        //Simulate touch input
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            AddHistoryNote(Notes.SWIPE_LEFT);
+        } //Swipe right
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            AddHistoryNote(Notes.SWIPE_UP);
+        } //Swipe Up
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            AddHistoryNote(Notes.SWIPE_DOWN);
+        } //Swipe Down
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            AddHistoryNote(Notes.SWIPE_RIGHT);
+        } //Swipe Right
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            AddHistoryNote(Notes.ROT_CW);
+        } //Rot CW
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            AddHistoryNote(Notes.ROT_CCW);
+        } //Rot CCW
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            AddHistoryNote(Notes.PINCH);
+        } //Pinch
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            AddHistoryNote(Notes.SPREAD);
+        } //Spread
+
+        //Simulate other sensors
+
+    }
 
     //Creating touch logic here
     private void FixedUpdate()
     {
         //Count down
         if(gameActive) CurrentTime += Time.fixedDeltaTime;
+
+        //TODO: Convert to tern
+        if (CurrentTime >= tapTimer)
+        {
+            TapButton.SetActive(true);
+        }
+
+        else
+        {
+            TapButton.SetActive(false);
+        }
+
         if(CurrentTime >= MaxTime)
         {
-            GetRandomSequence(currLimit);
             CurrentTime = 0;
-            if (currLimit < 7)
-            {
-                currLimit++;
-            }
             if (CurrentLife > 1)
             {
                 CurrentLife--;
@@ -124,10 +184,15 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                 if(CurrentLife > 0) CurrentLife--;
                 KillNoel();
                 GameOver();
-            }
 
-            //TODO:(Remove this) Debug score increment
-            CurrentScore += 10;
+                hasShakeys = false;
+            }
+        }
+
+        float shakeCheck = Input.acceleration.x;
+        if (Mathf.Abs(shakeCheck) >= shakeLimit)
+        {
+            Shakeys();
         }
 
         //TODO: Invert if
@@ -208,8 +273,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// Also clears the current notes in the history
     /// </summary>
     /// <param name="limit">Max number of notes to generate</param>
-   public void GetRandomSequence(int limit = 7)
-   {
+    public void GetRandomSequence(int limit = 7)
+    {
         limit = Mathf.Max(limit, 1);
         CurrentTime = 0;
 
@@ -223,7 +288,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         }
 
         SpawnTargetSequence();
-   }
+    }
 
     /// <summary>
     /// Spawns a note in the history holder and adds them to the history sequence
@@ -232,12 +297,15 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// <param name="note">Note to spawn</param>
     public void AddHistoryNote(Notes note)
     {
-        HistorySequence.Add(note);
+        if (HistorySequence.Count < currLimit)
+        {
+            HistorySequence.Add(note);
 
-        GameObject spawn = NoteScript.SpawnNote(NotePrefab, Sequence_History, note);
-        currentNotes_History.Add(spawn);
+            GameObject spawn = NoteScript.SpawnNote(NotePrefab, Sequence_History, note);
+            currentNotes_History.Add(spawn);
 
-        CheckLastNoteMatch();
+            CheckLastNoteMatch();
+        }
     }
 
     /// <summary>
@@ -255,8 +323,10 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// </summary>
     public void CheckLastNoteMatch()
     {
+        //Check if the history sequence "can" be checked
         if(TargetSequence.Length >= HistorySequence.Count)
         {
+            //If the sequences have enough to do "checking" compare last note
             if(TargetSequence[HistorySequence.Count - 1] == HistorySequence[HistorySequence.Count - 1])
             {
                 Noel.SetTrigger("Attack");
@@ -266,6 +336,54 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             {
                 Noel.SetTrigger("Hurt");
             }
+        }
+    }
+
+    /// Check entire note sequences against one another
+    public void CheckNoteSequence()
+    {
+        hasShakeys = false;
+        bool sequenceMatch = true;
+        if (TargetSequence.Length != HistorySequence.Count)
+        {
+            sequenceMatch = false;
+        }
+        else
+        {
+            //For all notes currently present
+            for (int i = 0; i < currLimit; i++)
+            {
+                //Check each note against each other
+                if (HistorySequence[i] != TargetSequence[i])
+                {
+                    sequenceMatch = false;
+                }
+            }
+        }
+
+        if (sequenceMatch)
+        {
+            CurrentScore++;
+            if (currLimit < 7)
+            {
+                currLimit++;
+            }
+
+            GetRandomSequence(currLimit);
+        }
+
+        else
+        {
+            CurrentLife--;
+
+            if (CurrentLife <= 0)
+            {
+                KillNoel();
+                GameOver();
+            }
+            
+            GetRandomSequence(currLimit);
+            CurrentTime = 0;
         }
     }
 
@@ -532,6 +650,16 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     }
 
     //TODO: Program shake
+    private void Shakeys()
+    {
+        Debug.Log("Your takeout is here");
+
+        if (!hasShakeys)
+        {
+            ClearHistoryNotes();
+            hasShakeys = true;
+        }
+    }
 
     //Game over functions
     public void GameOver()
