@@ -37,6 +37,11 @@ public class NotifsHandler : MonoBehaviour
 
         //Notif go pewpew
         AndroidNotification newNotif = new AndroidNotification(header, msg, deployNotifTime);
+
+        //TODO:Gura Icon stuff
+        newNotif.SmallIcon = "gura";
+        newNotif.LargeIcon = "guralarge";
+
         AndroidNotificationCenter.SendNotification(newNotif, "Proggers");
     }
 }
