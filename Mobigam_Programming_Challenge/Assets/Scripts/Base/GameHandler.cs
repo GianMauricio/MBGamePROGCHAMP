@@ -689,6 +689,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         //Summon game over UI
         GameoverUI.SetActive(true);
         GameUI.SetActive(false);
+        TapButton.SetActive(false);
     }
 
     public void Replay()
@@ -705,6 +706,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
         GameoverUI.SetActive(false);
         GameUI.SetActive(true);
+        TapButton.SetActive(false);
     }
 
     public void SendNotif()
