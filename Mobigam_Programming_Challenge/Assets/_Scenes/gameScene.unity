@@ -2251,7 +2251,7 @@ MonoBehaviour:
   TargetSequence: 00000000020000000200000003000000040000000600000003000000
   HistorySequence: 
   CurrentTime: 0
-  MaxTime: 1
+  MaxTime: 5
   NotePrefab: {fileID: 8912903995512835158, guid: b0a7b52174b3208498a84c114f90ae53,
     type: 3}
   Sequence_Holder: {fileID: 858116173}

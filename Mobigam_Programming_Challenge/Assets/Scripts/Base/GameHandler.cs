@@ -719,12 +719,14 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         GameoverUI.SetActive(false);
         GameUI.SetActive(true);
         TapButton.SetActive(false);
+        if(Annoyance.checkPrevScore()){PrevScorePanel.SetActive(true);}
     }
 
     public void SendNotif()
     {
         PrevScore = CurrentScore;
         Annoyance.SendScoreNotif(CurrentScore);
+        PrevScorePanel.SetActive(true);
     }
 
     public void Leave()
