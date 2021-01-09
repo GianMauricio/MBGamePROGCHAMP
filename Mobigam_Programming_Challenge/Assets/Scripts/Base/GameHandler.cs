@@ -714,6 +714,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
     public void SendNotif()
     {
+        PrevScore = CurrentScore;
         Annoyance.SendScoreNotif(CurrentScore);
     }
 
