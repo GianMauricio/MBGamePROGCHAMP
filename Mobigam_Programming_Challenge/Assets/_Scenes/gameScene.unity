@@ -2268,8 +2268,8 @@ MonoBehaviour:
   _spreadProperty:
     MinDistanceChange: 0.2
   _rotateProperty:
-    MinDistance: 0.75
-    MinChange: 0.4
+    MinDistance: 2
+    MinChange: 10
 --- !u!114 &1547217791
 MonoBehaviour:
   m_ObjectHideFlags: 0
