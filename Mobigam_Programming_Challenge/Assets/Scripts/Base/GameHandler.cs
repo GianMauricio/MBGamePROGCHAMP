@@ -57,6 +57,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     public Animator Noel;
     public GameObject GameoverUI;
     public GameObject TapButton;
+    public GameObject PrevScorePanel;
     public GameObject GameUI;
     public NotifsHandler Annoyance;
 
@@ -108,6 +109,14 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
         Debug.Log("Calling parseData");
         Annoyance.parseData();
+
+        //TODO: convert to tern
+        if (!Annoyance.checkPrevScore())
+        {
+            PrevScorePanel.SetActive(false);
+        }
+        else{PrevScorePanel.SetActive(true);}
+
         PrevScore = Annoyance.getprevScore();
     }
 

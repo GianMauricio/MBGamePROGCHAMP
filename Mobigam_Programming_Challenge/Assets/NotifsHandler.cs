@@ -8,6 +8,7 @@ public class NotifsHandler : MonoBehaviour
 {
     public Text PrevScore;
     private int prevScore;
+    private bool hasPrevScore = false;
 
     public void NotifChannel()
     {
@@ -62,6 +63,7 @@ public class NotifsHandler : MonoBehaviour
             Debug.Log("No notif data found");
             PrevScore.text = "0";
             prevScore = 0;
+            hasPrevScore = false;
         }
 
         else
@@ -69,11 +71,17 @@ public class NotifsHandler : MonoBehaviour
             Debug.Log("Notif data found");
             PrevScore.text = cringeFactor.Notification.IntentData;
             prevScore = int.Parse(cringeFactor.Notification.IntentData);
+            hasPrevScore = true;
         }
     }
 
     public int getprevScore()
     {
         return prevScore;
+    }
+
+    public bool checkPrevScore()
+    {
+        return hasPrevScore;
     }
 }
