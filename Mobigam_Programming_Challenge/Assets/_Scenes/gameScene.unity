@@ -2257,7 +2257,7 @@ MonoBehaviour:
   Sequence_History: {fileID: 851085807}
   Noel: {fileID: 596256699}
   GameoverUI: {fileID: 52426591}
-  TapButton: {fileID: 0}
+  TapButton: {fileID: 1162128806}
   GameUI: {fileID: 1336840580}
   Annoyance: {fileID: 1008285060}
   _swipeProperty:
