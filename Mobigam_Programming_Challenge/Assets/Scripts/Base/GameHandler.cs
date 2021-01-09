@@ -57,6 +57,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     public Animator Noel;
     public GameObject GameoverUI;
     public GameObject TapButton;
+    public GameObject GameUI;
     public NotifsHandler Annoyance;
 
     /// <summary>
@@ -193,8 +194,14 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             }
         }
 
-        float shakeCheck = Input.acceleration.x;
-        if (Mathf.Abs(shakeCheck) >= shakeLimit)
+        float shakeCheckx = Input.acceleration.x;
+        if (Mathf.Abs(shakeCheckx) >= shakeLimit)
+        {
+            Shakeys();
+        }
+
+        float shakeChecky = Input.acceleration.y;
+        if (Mathf.Abs(shakeChecky) >= shakeLimit)
         {
             Shakeys();
         }
@@ -674,11 +681,12 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
         //Summon game over UI
         GameoverUI.SetActive(true);
+        GameUI.SetActive(false);
     }
 
     public void Replay()
     {
-        currLimit = 2;
+        currLimit = 1;
         GetRandomSequence(1);
         CurrentTime = 0;
 
@@ -689,7 +697,11 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         ReviveNoel();
 
         GameoverUI.SetActive(false);
+        GameUI.SetActive(true);
+    }
 
+    public void SendNotif()
+    {
         Annoyance.SendScoreNotif(PrevScore);
     }
 
