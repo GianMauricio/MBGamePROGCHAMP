@@ -92,7 +92,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     //Dynamic touch data
     private Vector2 start_pos;
     private Vector2 end_pos;
-
+    private bool processingTouch;
     private float gesture_time;
 
     private float tapTimer;
@@ -116,6 +116,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         else{PrevScorePanel.SetActive(true);}
 
         PrevScore = Annoyance.getprevScore();
+        processingTouch = false;
     }
 
     //TODO:(Delete this) Debug functions for PC based testing
@@ -222,6 +223,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             //TODO: Invert if
             if (Input.touchCount > 0)
             {
+                processingTouch = true;
                 //Swipe gesture
                 if (Input.touchCount == 1)
                 {
@@ -315,7 +317,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// <param name="note">Note to spawn</param>
     public void AddHistoryNote(Notes note)
     {
-        if (HistorySequence.Count < currLimit && aFingerTouch.phase == TouchPhase.Ended)
+        processingTouch = false;
+        if (HistorySequence.Count < currLimit)
         {
             HistorySequence.Add(note);
 
