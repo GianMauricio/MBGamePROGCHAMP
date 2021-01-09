@@ -220,20 +220,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             }
 
             //TODO: Invert if
-
-            if (Input.touchCount > 0)
-            {
-                if (Input.GetTouch(0).phase == TouchPhase.Began)
-                {
-                    //Edit some boolean
-                }
-
-                if (Input.GetTouch(0).phase == TouchPhase.Ended)
-                {
-                    //Release boolean value
-                }
-            }
-
             if (Input.touchCount > 0)
             {
                 //Swipe gesture
@@ -329,7 +315,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// <param name="note">Note to spawn</param>
     public void AddHistoryNote(Notes note)
     {
-        if (HistorySequence.Count < currLimit && Input.touchCount == 0)
+        if (HistorySequence.Count < currLimit && aFingerTouch.phase == TouchPhase.Ended)
         {
             HistorySequence.Add(note);
 
