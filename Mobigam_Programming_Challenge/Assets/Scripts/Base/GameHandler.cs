@@ -162,120 +162,124 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private void FixedUpdate()
     {
         //Count down
-        if(gameActive) CurrentTime += Time.fixedDeltaTime;
-
-        //TODO: Convert to tern
-        if (CurrentTime >= tapTimer)
+        if (gameActive)
         {
-            TapButton.SetActive(true);
-        }
+            CurrentTime += Time.fixedDeltaTime;
 
-        else
-        {   
-            TapButton.SetActive(false);
-        }
-
-        if(CurrentTime >= MaxTime)
-        {
-            GetRandomSequence(currLimit);
-            CurrentTime = 0;
-            if (CurrentLife > 1)
+            //TODO: Convert to tern
+            if (CurrentTime >= tapTimer)
             {
-                CurrentLife--;
-            }
-            else
-            {
-                //TODO:End Game + Save Score + Send Notif
-                if(CurrentLife > 0) CurrentLife--;
-                KillNoel();
-                GameOver();
-
-                hasShakeys = false;
-            }
-        }
-
-        float shakeCheckx = Input.acceleration.x;
-        if (Mathf.Abs(shakeCheckx) >= shakeLimit)
-        {
-            Shakeys();
-        }
-
-        float shakeChecky = Input.acceleration.y;
-        if (Mathf.Abs(shakeChecky) >= shakeLimit)
-        {
-            Shakeys();
-        }
-
-        //TODO: Invert if
-        if (Input.touchCount > 0 && time_limiter <= 0)
-        {
-            //Swipe gesture
-            if (Input.touchCount == 1)
-            {
-                Debug.Log("One Touch detected");
-                setTouchOrigin();
+                TapButton.SetActive(true);
             }
 
             else
             {
-                aFingerTouch = Input.GetTouch(0);
-                bFingerTouch = Input.GetTouch(1);
+                TapButton.SetActive(false);
+            }
 
-                Debug.Log("Double touch detected");
-                if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
+            if (CurrentTime >= MaxTime)
+            {
+                GetRandomSequence(currLimit);
+                CurrentTime = 0;
+                if (CurrentLife > 1)
                 {
-                    Debug.Log("Pinch/Spread starts");
-                    Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
-                    Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
-
-                    float currDistance = Vector2.Distance(aFingerTouch.position, bFingerTouch.position);
-                    float prevDistance = Vector2.Distance(prevPoint1, prevPoint2);
-
-                    if (Mathf.Abs(currDistance - prevDistance) >= (_spreadProperty.MinDistanceChange * Screen.dpi))
-                    {
-                        Debug.Log("Firing spread ev");
-                        FireSpreadEvent(currDistance - prevDistance);
-                    }
+                    CurrentLife--;
                 }
-
-                //TODO: Invert if
-                if ((aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved) &&
-                    Vector2.Distance(aFingerTouch.position, bFingerTouch.position) >= (_rotateProperty.MinDistance * Screen.dpi))
+                else
                 {
-                    Debug.Log("Rotation detected");
-                    Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
-                    Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
+                    //TODO:End Game + Save Score + Send Notif
+                    if (CurrentLife > 0) CurrentLife--;
+                    KillNoel();
+                    GameOver();
 
-                    Vector2 diff_vector = aFingerTouch.position - bFingerTouch.position;
-                    Vector2 prev_diff_vector = prevPoint1 - prevPoint2;
-
-                    float angle = Vector2.Angle(prev_diff_vector, diff_vector);
-                    if (angle >= _rotateProperty.MinChange)
-                    {
-                        Vector3 cross = Vector3.Cross(prev_diff_vector, diff_vector);
-
-                        if (cross.z > 0)
-                        {
-                            FireRotateEvent(angle, RotationDirections.CCW);
-                            Debug.Log($"Rotate Counter Cw{angle}");
-                        }
-
-                        else if (cross.z < 0)
-                        {
-                            FireRotateEvent(angle, RotationDirections.CW);
-                            Debug.Log($"Rotate CW {angle}");
-                        }
-                    }
+                    hasShakeys = false;
                 }
             }
-            
-            time_limiter = 1;
-        }
 
-        else
-        { 
-            time_limiter -= 2;
-           //Debug.Log(time_limiter);
+            float shakeCheckx = Input.acceleration.x;
+            if (Mathf.Abs(shakeCheckx) >= shakeLimit)
+            {
+                Shakeys();
+            }
+
+            float shakeChecky = Input.acceleration.y;
+            if (Mathf.Abs(shakeChecky) >= shakeLimit)
+            {
+                Shakeys();
+            }
+
+            //TODO: Invert if
+            if (Input.touchCount > 0 && time_limiter <= 0)
+            {
+                //Swipe gesture
+                if (Input.touchCount == 1)
+                {
+                    Debug.Log("One Touch detected");
+                    setTouchOrigin();
+                }
+
+                else
+                {
+                    aFingerTouch = Input.GetTouch(0);
+                    bFingerTouch = Input.GetTouch(1);
+
+                    Debug.Log("Double touch detected");
+                    if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
+                    {
+                        Debug.Log("Pinch/Spread starts");
+                        Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
+                        Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
+
+                        float currDistance = Vector2.Distance(aFingerTouch.position, bFingerTouch.position);
+                        float prevDistance = Vector2.Distance(prevPoint1, prevPoint2);
+
+                        if (Mathf.Abs(currDistance - prevDistance) >= (_spreadProperty.MinDistanceChange * Screen.dpi))
+                        {
+                            Debug.Log("Firing spread ev");
+                            FireSpreadEvent(currDistance - prevDistance);
+                        }
+                    }
+
+                    //TODO: Invert if
+                    if ((aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved) &&
+                        Vector2.Distance(aFingerTouch.position, bFingerTouch.position) >=
+                        (_rotateProperty.MinDistance * Screen.dpi))
+                    {
+                        Debug.Log("Rotation detected");
+                        Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
+                        Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
+
+                        Vector2 diff_vector = aFingerTouch.position - bFingerTouch.position;
+                        Vector2 prev_diff_vector = prevPoint1 - prevPoint2;
+
+                        float angle = Vector2.Angle(prev_diff_vector, diff_vector);
+                        if (angle >= _rotateProperty.MinChange)
+                        {
+                            Vector3 cross = Vector3.Cross(prev_diff_vector, diff_vector);
+
+                            if (cross.z > 0)
+                            {
+                                FireRotateEvent(angle, RotationDirections.CCW);
+                                Debug.Log($"Rotate Counter Cw{angle}");
+                            }
+
+                            else if (cross.z < 0)
+                            {
+                                FireRotateEvent(angle, RotationDirections.CW);
+                                Debug.Log($"Rotate CW {angle}");
+                            }
+                        }
+                    }
+                }
+
+                time_limiter = 1;
+            }
+
+            else
+            {
+                time_limiter -= 2;
+                //Debug.Log(time_limiter);
+            }
         }
     }
 
@@ -334,18 +338,21 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// </summary>
     public void CheckLastNoteMatch()
     {
-        //Check if the history sequence "can" be checked
-        if(TargetSequence.Length >= HistorySequence.Count)
+        if (gameActive)
         {
-            //If the sequences have enough to do "checking" compare last note
-            if(TargetSequence[HistorySequence.Count - 1] == HistorySequence[HistorySequence.Count - 1])
+            //Check if the history sequence "can" be checked
+            if (TargetSequence.Length >= HistorySequence.Count)
             {
-                Noel.SetTrigger("Attack");
-            }
+                //If the sequences have enough to do "checking" compare last note
+                if (TargetSequence[HistorySequence.Count - 1] == HistorySequence[HistorySequence.Count - 1])
+                {
+                    Noel.SetTrigger("Attack");
+                }
 
-            else
-            {
-                Noel.SetTrigger("Hurt");
+                else
+                {
+                    Noel.SetTrigger("Hurt");
+                }
             }
         }
     }
