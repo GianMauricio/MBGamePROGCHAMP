@@ -176,6 +176,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
         if(CurrentTime >= MaxTime)
         {
+            GetRandomSequence();
             CurrentTime = 0;
             if (CurrentLife > 1)
             {
@@ -351,6 +352,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         {
             sequenceMatch = false;
         }
+
         else
         {
             //For all notes currently present
