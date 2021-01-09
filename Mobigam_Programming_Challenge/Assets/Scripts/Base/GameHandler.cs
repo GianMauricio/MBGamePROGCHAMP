@@ -105,6 +105,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
         tapTimer = MaxTime - (MaxTime * 0.25f);
         hasShakeys = false;
+
+        Annoyance.parseData();
     }
 
     //TODO:(Delete this) Debug functions for PC based testing

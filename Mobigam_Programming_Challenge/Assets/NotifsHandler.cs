@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Notifications.Android;
+using UnityEngine.UI;
 
 public class NotifsHandler : MonoBehaviour
 {
+    public Text PrevScore;
+
     public void NotifChannel()
     {
         //Channel init data
@@ -38,10 +41,28 @@ public class NotifsHandler : MonoBehaviour
         //Notif go pewpew
         AndroidNotification newNotif = new AndroidNotification(header, msg, deployNotifTime);
 
+        //Prev Score data
+        newNotif.IntentData = score.ToString();
+
         //TODO:Gura Icon stuff
         newNotif.SmallIcon = "gura";
         newNotif.LargeIcon = "guralarge";
 
         AndroidNotificationCenter.SendNotification(newNotif, "Proggers");
+    }
+
+    public void parseData()
+    {
+        AndroidNotificationIntentData cringeFactor = AndroidNotificationCenter.GetLastNotificationIntent();
+
+        if (cringeFactor == null)
+        {
+            PrevScore.text = "0";
+        }
+
+        else
+        {
+            PrevScore.text = cringeFactor.Notification.IntentData;
+        }
     }
 }
