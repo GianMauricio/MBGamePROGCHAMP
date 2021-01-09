@@ -151,7 +151,10 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         } //Spread
 
         //Simulate other sensors
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Shakeys();
+        } //Shake
     }
 
     //Creating touch logic here
