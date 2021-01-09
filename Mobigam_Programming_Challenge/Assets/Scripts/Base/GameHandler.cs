@@ -702,8 +702,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
         gameActive = true;
         CurrentLife = 3;
-        PrevScore = CurrentScore;
-        CurrentScore = 0;
         ReviveNoel();
 
         GameoverUI.SetActive(false);
@@ -713,7 +711,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
     public void SendNotif()
     {
-        Annoyance.SendScoreNotif(PrevScore);
+        Annoyance.SendScoreNotif(CurrentScore);
     }
 
     public void Leave()
