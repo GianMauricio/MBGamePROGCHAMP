@@ -13,7 +13,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private int currLimit;
     public int PrevScore;
     private bool gameActive;
-    public float shakeLimit = 0.2f;
+    public float shakeLimit = 0.8f;
     private bool hasShakeys;
 
     /// <summary>
@@ -120,6 +120,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     }
 
     //TODO:(Delete this) Debug functions for PC based testing
+    /*
     private void Update()
     {
         //Simulate touch input
@@ -168,10 +169,10 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         {
             Shakeys();
         } //Shake
-    }
+    }*/
 
     //Creating touch logic here
-    private void FixedUpdate()
+    private void Update()
     {
         //Count down
         if (gameActive)
@@ -221,52 +222,61 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             }
 
             //TODO: Invert if
-            if (Input.touchCount > 0 && !processingTouch)
+            if (Input.touchCount > 0)
             {
                 //Swipe gesture
-                if (Input.touchCount == 1)
+                Debug.Log(processingTouch);
+                if (Input.touchCount == 1 && !processingTouch)
                 {
                     Debug.Log("One Touch detected");
-                    setTouchOrigin();
-                    processingTouch = true;
+                    aFingerTouch = Input.GetTouch(0);
+
+                    if (aFingerTouch.phase == TouchPhase.Began)
+                    {
+                        start_pos = aFingerTouch.position;
+                        gesture_time = 0;
+                        Debug.Log("Origin set");
+                    }
+
+                    if (aFingerTouch.phase == TouchPhase.Ended)
+                    {
+                        Debug.Log("Initial Firing Swipe");
+                        end_pos = aFingerTouch.position;
+
+                        if (gesture_time <= _swipeProperty.MaxGestureTime && Vector2.Distance(start_pos, end_pos) >=
+                            (_swipeProperty.MinSwipeDistance * Screen.dpi))
+                        {
+                            FireSwipeFunction();
+                        }
+                    }
+
+                    else gesture_time += Time.deltaTime;
                 }
 
                 else
                 {
+                    processingTouch = true;
                     aFingerTouch = Input.GetTouch(0);
                     bFingerTouch = Input.GetTouch(1);
-                    processingTouch = true;
-
-                    Debug.Log("Double touch detected");
-                    if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
-                    {
-                        Debug.Log("Pinch/Spread starts");
-                        Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
-                        Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
-
-                        float currDistance = Vector2.Distance(aFingerTouch.position, bFingerTouch.position);
-                        float prevDistance = Vector2.Distance(prevPoint1, prevPoint2);
-
-                        if (Mathf.Abs(currDistance - prevDistance) >= (_spreadProperty.MinDistanceChange * Screen.dpi))
-                        {
-                            Debug.Log("Firing spread ev");
-                            FireSpreadEvent(currDistance - prevDistance);
-                        }
-                    }
 
                     //TODO: Invert if
                     if ((aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved) &&
                         Vector2.Distance(aFingerTouch.position, bFingerTouch.position) >=
                         (_rotateProperty.MinDistance * Screen.dpi))
                     {
-                        Debug.Log("Rotation detected");
+                        Debug.Log("Double touch detected");
                         Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
                         Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
 
+                        //Rotate logic
                         Vector2 diff_vector = aFingerTouch.position - bFingerTouch.position;
                         Vector2 prev_diff_vector = prevPoint1 - prevPoint2;
-
                         float angle = Vector2.Angle(prev_diff_vector, diff_vector);
+
+                        //Pinch/spread logic
+                        float currDistance = Vector2.Distance(aFingerTouch.position, bFingerTouch.position);
+                        float prevDistance = Vector2.Distance(prevPoint1, prevPoint2);
+
                         if (angle >= _rotateProperty.MinChange)
                         {
                             Vector3 cross = Vector3.Cross(prev_diff_vector, diff_vector);
@@ -283,6 +293,15 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                                 Debug.Log($"Rotate CW {angle}");
                             }
                         }
+
+                        if (Mathf.Abs(currDistance - prevDistance) >= (_spreadProperty.MinDistanceChange * Screen.dpi))
+                        {
+                            Debug.Log("Firing spread ev");
+                            FireSpreadEvent(currDistance - prevDistance);
+                        }
+
+                        processingTouch = false;
+                        Debug.Log(processingTouch);
                     }
                 }
             }
@@ -507,7 +526,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             AddHistoryNote(Notes.SPREAD);
         }
 
-        else
+        if(args.DistanceDiff < 0)
         {
             //spawn pinch note
             AddHistoryNote(Notes.PINCH);
@@ -531,34 +550,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private Vector2 GetPreviousPoint(Touch t)
     {
         return t.position - t.deltaPosition;
-    }
-
-    //Set touch params
-    //TODO:(Delete this) from CheckSingleFingerGesture()
-    public void setTouchOrigin()
-    {
-        aFingerTouch = Input.GetTouch(0);
-        
-        if (aFingerTouch.phase == TouchPhase.Began)
-        {
-            start_pos = aFingerTouch.position;
-            gesture_time = 0;
-            Debug.Log("Origin set");
-        }
-
-        if (aFingerTouch.phase == TouchPhase.Ended)
-        {
-            Debug.Log("Initial Firing Swipe");
-            end_pos = aFingerTouch.position;
-
-            if (gesture_time <= _swipeProperty.MaxGestureTime && Vector2.Distance(start_pos, end_pos) >=
-                (_swipeProperty.MinSwipeDistance * Screen.dpi))
-            {
-                FireSwipeFunction();
-            }
-        }
-
-        else gesture_time += Time.deltaTime;
     }
 
     //Smacc object via raycast
@@ -654,7 +645,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         {
             PinchSpreadArgs(this, args);
         }
-
         this.OnPinchSpread(args);
     }
 
@@ -671,7 +661,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         {
             RotateArgs(this, args);
         }
-
         this.onRotate(args);
     }
 

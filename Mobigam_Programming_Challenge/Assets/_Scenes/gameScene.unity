@@ -2266,10 +2266,10 @@ MonoBehaviour:
     MinSwipeDistance: 0.25
     MaxGestureTime: 0.7
   _spreadProperty:
-    MinDistanceChange: 0.2
+    MinDistanceChange: 0.8
   _rotateProperty:
-    MinDistance: 2
-    MinChange: 10
+    MinDistance: 1
+    MinChange: 15
 --- !u!114 &1547217791
 MonoBehaviour:
   m_ObjectHideFlags: 0
