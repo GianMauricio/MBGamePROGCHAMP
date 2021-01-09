@@ -699,6 +699,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         currLimit = 1;
         GetRandomSequence(1);
         CurrentTime = 0;
+        CurrentScore = 0;
 
         gameActive = true;
         CurrentLife = 3;
