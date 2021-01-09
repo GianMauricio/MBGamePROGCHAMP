@@ -108,6 +108,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
         Debug.Log("Calling parseData");
         Annoyance.parseData();
+        PrevScore = Annoyance.getprevScore();
     }
 
     //TODO:(Delete this) Debug functions for PC based testing

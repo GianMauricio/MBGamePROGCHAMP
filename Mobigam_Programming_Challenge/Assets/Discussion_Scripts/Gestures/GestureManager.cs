@@ -36,6 +36,7 @@ public class GestureManager : MonoBehaviour
         {
             Instance = this;
         }
+
         else if (Instance != this)
         {
             Destroy(this.gameObject);
