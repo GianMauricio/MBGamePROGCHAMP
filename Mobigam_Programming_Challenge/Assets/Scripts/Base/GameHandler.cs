@@ -94,14 +94,12 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private Vector2 end_pos;
 
     private float gesture_time;
-    private float time_limiter;
 
     private float tapTimer;
     private void Start()
     {
         currLimit = 1;
         GetRandomSequence(currLimit);
-        time_limiter = 0;
         gameActive = true;
 
         tapTimer = MaxTime - (MaxTime * 0.25f);
@@ -222,7 +220,21 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             }
 
             //TODO: Invert if
-            if (Input.touchCount > 0 && time_limiter <= 0)
+
+            if (Input.touchCount > 0)
+            {
+                if (Input.GetTouch(0).phase == TouchPhase.Began)
+                {
+                    //Edit some boolean
+                }
+
+                if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                {
+                    //Release boolean value
+                }
+            }
+
+            if (Input.touchCount > 0)
             {
                 //Swipe gesture
                 if (Input.touchCount == 1)
@@ -284,14 +296,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                         }
                     }
                 }
-
-                time_limiter = 1;
-            }
-
-            else
-            {
-                time_limiter -= 2;
-                //Debug.Log(time_limiter);
             }
         }
     }
@@ -325,7 +329,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// <param name="note">Note to spawn</param>
     public void AddHistoryNote(Notes note)
     {
-        if (HistorySequence.Count < currLimit)
+        if (HistorySequence.Count < currLimit && Input.touchCount == 0)
         {
             HistorySequence.Add(note);
 
