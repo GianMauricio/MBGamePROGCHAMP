@@ -221,7 +221,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             }
 
             //TODO: Invert if
-            if (Input.touchCount > 0)
+            if (Input.touchCount > 0 && !processingTouch)
             {
                 processingTouch = true;
                 //Swipe gesture
