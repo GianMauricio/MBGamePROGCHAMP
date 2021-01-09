@@ -223,18 +223,19 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             //TODO: Invert if
             if (Input.touchCount > 0 && !processingTouch)
             {
-                processingTouch = true;
                 //Swipe gesture
                 if (Input.touchCount == 1)
                 {
                     Debug.Log("One Touch detected");
                     setTouchOrigin();
+                    processingTouch = true;
                 }
 
                 else
                 {
                     aFingerTouch = Input.GetTouch(0);
                     bFingerTouch = Input.GetTouch(1);
+                    processingTouch = true;
 
                     Debug.Log("Double touch detected");
                     if (aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved)
