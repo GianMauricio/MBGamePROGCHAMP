@@ -454,6 +454,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     public void ReviveNoel()
     {
         Noel.SetTrigger("Revive");
+        gameActive = true;
     }
 
     /// <summary>
@@ -702,14 +703,13 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         CurrentTime = 0;
         CurrentScore = 0;
 
-        gameActive = true;
         CurrentLife = 3;
-        ReviveNoel();
-
+        
         GameoverUI.SetActive(false);
         GameUI.SetActive(true);
         TapButton.SetActive(false);
         if(Annoyance.checkPrevScore()){PrevScorePanel.SetActive(true);}
+        ReviveNoel();
     }
 
     public void SendNotif()
