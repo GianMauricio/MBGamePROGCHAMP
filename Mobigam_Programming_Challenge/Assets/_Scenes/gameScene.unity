@@ -1701,7 +1701,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1008285059}
   - component: {fileID: 1008285060}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: NotifManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2079,6 +2079,7 @@ MonoBehaviour:
   MaxLife: 3
   CurrentScore: 0
   PrevScore: 0
+  shakeLimit: 0.2
   TargetSequence: 00000000020000000200000003000000040000000600000003000000
   HistorySequence: 
   CurrentTime: 0

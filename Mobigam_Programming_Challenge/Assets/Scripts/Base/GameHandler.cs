@@ -170,13 +170,13 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         }
 
         else
-        {
+        {   
             TapButton.SetActive(false);
         }
 
         if(CurrentTime >= MaxTime)
         {
-            GetRandomSequence();
+            GetRandomSequence(currLimit);
             CurrentTime = 0;
             if (CurrentLife > 1)
             {
