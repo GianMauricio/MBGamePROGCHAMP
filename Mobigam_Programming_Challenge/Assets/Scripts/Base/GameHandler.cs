@@ -16,8 +16,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     public float shakeLimit = 0.8f;
     private bool hasShakeys;
 
-    [Tooltip("Keep this within 0.001 - 0.009. Bigger = more deadzone")]
-    public float noteInterval = 0.005f;
+    [Tooltip("Keep this within 0.1 - 0.5. Bigger = more deadzone")]
+    public float noteInterval = 0.3f;
     public float noteSpawnTimer;
 
     /// <summary>

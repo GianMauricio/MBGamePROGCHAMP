@@ -2248,7 +2248,7 @@ MonoBehaviour:
   CurrentScore: 0
   PrevScore: 0
   shakeLimit: 0.2
-  noteInterval: 1
+  noteInterval: 0.3
   noteSpawnTimer: 0
   TargetSequence: 00000000020000000200000003000000040000000600000003000000
   HistorySequence: 
@@ -2271,7 +2271,7 @@ MonoBehaviour:
     MinDistanceChange: 0.2
   _rotateProperty:
     MinDistance: 0.5
-    MinChange: 10
+    MinChange: 18
 --- !u!114 &1547217791
 MonoBehaviour:
   m_ObjectHideFlags: 0
