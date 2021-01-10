@@ -2265,7 +2265,7 @@ MonoBehaviour:
   GameUI: {fileID: 1336840580}
   Annoyance: {fileID: 1008285060}
   _swipeProperty:
-    MinSwipeDistance: 0.25
+    MinSwipeDistance: 0.15
     MaxGestureTime: 0.7
   _spreadProperty:
     MinDistanceChange: 0.2

@@ -15,7 +15,9 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private bool gameActive;
     public float shakeLimit = 0.8f;
     private bool hasShakeys;
-    public float noteInterval = 0.01f;
+
+    [Tooltip("Keep this within 0.001 - 0.009. Bigger = more deadzone")]
+    public float noteInterval = 0.005f;
     public float noteSpawnTimer;
 
     /// <summary>
@@ -178,6 +180,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         {
             CurrentTime += Time.fixedDeltaTime;
             noteSpawnTimer += Time.deltaTime;
+
+            Debug.Log("Time till next note: " + (noteInterval - noteSpawnTimer));
             //TODO: Convert to tern
             if (CurrentTime >= tapTimer)
             {
@@ -231,14 +235,9 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             //TODO: Invert if
             if (Input.touchCount > 0)
             {
-                //Debug touch phases
-                Debug.Log("Touch detected: ");
-
                 //Swipe gesture
                 if (Input.touchCount == 1)
                 {
-                    Debug.Log("Single touch: ");
-                    Debug.Log(aFingerTouch.phase);
                     aFingerTouch = Input.GetTouch(0);
 
                     if (aFingerTouch.phase == TouchPhase.Began)
@@ -265,10 +264,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                 {
                     aFingerTouch = Input.GetTouch(0);
                     bFingerTouch = Input.GetTouch(1);
-
-                    Debug.Log("Double Touch: ");
-                    Debug.Log(aFingerTouch.phase);
-                    Debug.Log(bFingerTouch.phase);
 
                     //TODO: Invert if
                     if ((aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved) &&
