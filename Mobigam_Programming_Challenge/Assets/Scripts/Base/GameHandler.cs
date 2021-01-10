@@ -15,7 +15,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private bool gameActive;
     public float shakeLimit = 0.8f;
     private bool hasShakeys;
-    public float noteInterval = 1.0f;
+    public float noteInterval = 0.01f;
     public float noteSpawnTimer;
 
     /// <summary>
