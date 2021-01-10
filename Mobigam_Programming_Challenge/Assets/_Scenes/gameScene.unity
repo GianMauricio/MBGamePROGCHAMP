@@ -2248,10 +2248,12 @@ MonoBehaviour:
   CurrentScore: 0
   PrevScore: 0
   shakeLimit: 0.2
+  noteInterval: 1
+  noteSpawnTimer: 0
   TargetSequence: 00000000020000000200000003000000040000000600000003000000
   HistorySequence: 
   CurrentTime: 0
-  MaxTime: 5
+  MaxTime: 10
   NotePrefab: {fileID: 8912903995512835158, guid: b0a7b52174b3208498a84c114f90ae53,
     type: 3}
   Sequence_Holder: {fileID: 858116173}
@@ -2266,10 +2268,10 @@ MonoBehaviour:
     MinSwipeDistance: 0.25
     MaxGestureTime: 0.7
   _spreadProperty:
-    MinDistanceChange: 0.4
+    MinDistanceChange: 0.2
   _rotateProperty:
-    MinDistance: 0.7
-    MinChange: 15
+    MinDistance: 0.5
+    MinChange: 10
 --- !u!114 &1547217791
 MonoBehaviour:
   m_ObjectHideFlags: 0

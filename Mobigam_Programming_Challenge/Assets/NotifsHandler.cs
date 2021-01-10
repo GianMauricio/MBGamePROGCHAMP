@@ -55,12 +55,10 @@ public class NotifsHandler : MonoBehaviour
 
     public void parseData()
     {
-        Debug.Log("Attempting to parse notif");
         AndroidNotificationIntentData cringeFactor = AndroidNotificationCenter.GetLastNotificationIntent();
 
         if (cringeFactor == null)
         {
-            Debug.Log("No notif data found");
             PrevScore.text = "0";
             prevScore = 0;
             hasPrevScore = false;
@@ -68,7 +66,6 @@ public class NotifsHandler : MonoBehaviour
 
         else
         {
-            Debug.Log("Notif data found");
             PrevScore.text = cringeFactor.Notification.IntentData;
             prevScore = int.Parse(cringeFactor.Notification.IntentData);
             hasPrevScore = true;

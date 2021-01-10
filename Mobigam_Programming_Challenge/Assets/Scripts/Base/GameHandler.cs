@@ -15,6 +15,8 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     private bool gameActive;
     public float shakeLimit = 0.8f;
     private bool hasShakeys;
+    public float noteInterval = 1.0f;
+    public float noteSpawnTimer;
 
     /// <summary>
     /// Target Sequence of notes to be done by the player
@@ -92,12 +94,12 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     //Dynamic touch data
     private Vector2 start_pos;
     private Vector2 end_pos;
-    private bool processingTouch;
     private float gesture_time;
 
     private float tapTimer;
     private void Start()
     {
+        noteSpawnTimer = 0.0f;
         currLimit = 1;
         GetRandomSequence(currLimit);
         gameActive = true;
@@ -105,7 +107,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         tapTimer = MaxTime - (MaxTime * 0.25f);
         hasShakeys = false;
 
-        Debug.Log("Calling parseData");
         Annoyance.parseData();
 
         //TODO: convert to tern
@@ -116,7 +117,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         else{PrevScorePanel.SetActive(true);}
 
         PrevScore = Annoyance.getprevScore();
-        processingTouch = false;
     }
 
     //TODO:(Delete this) Debug functions for PC based testing
@@ -177,7 +177,7 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         if (gameActive)
         {
             CurrentTime += Time.fixedDeltaTime;
-
+            noteSpawnTimer += Time.deltaTime;
             //TODO: Convert to tern
             if (CurrentTime >= tapTimer)
             {
@@ -231,23 +231,24 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             //TODO: Invert if
             if (Input.touchCount > 0)
             {
+                //Debug touch phases
+                Debug.Log("Touch detected: ");
+
                 //Swipe gesture
-                Debug.Log(processingTouch);
-                if (Input.touchCount == 1 && !processingTouch)
+                if (Input.touchCount == 1)
                 {
-                    Debug.Log("One Touch detected");
+                    Debug.Log("Single touch: ");
+                    Debug.Log(aFingerTouch.phase);
                     aFingerTouch = Input.GetTouch(0);
 
                     if (aFingerTouch.phase == TouchPhase.Began)
                     {
                         start_pos = aFingerTouch.position;
                         gesture_time = 0;
-                        Debug.Log("Origin set");
                     }
 
                     if (aFingerTouch.phase == TouchPhase.Ended)
                     {
-                        Debug.Log("Initial Firing Swipe");
                         end_pos = aFingerTouch.position;
 
                         if (gesture_time <= _swipeProperty.MaxGestureTime && Vector2.Distance(start_pos, end_pos) >=
@@ -262,16 +263,18 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
 
                 else
                 {
-                    processingTouch = true;
                     aFingerTouch = Input.GetTouch(0);
                     bFingerTouch = Input.GetTouch(1);
+
+                    Debug.Log("Double Touch: ");
+                    Debug.Log(aFingerTouch.phase);
+                    Debug.Log(bFingerTouch.phase);
 
                     //TODO: Invert if
                     if ((aFingerTouch.phase == TouchPhase.Moved || bFingerTouch.phase == TouchPhase.Moved) &&
                         Vector2.Distance(aFingerTouch.position, bFingerTouch.position) >=
                         (_rotateProperty.MinDistance * Screen.dpi))
                     {
-                        Debug.Log("Double touch detected");
                         Vector2 prevPoint1 = GetPreviousPoint(aFingerTouch);
                         Vector2 prevPoint2 = GetPreviousPoint(bFingerTouch);
 
@@ -287,31 +290,26 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
                         if (angle >= _rotateProperty.MinChange)
                         {
                             Vector3 cross = Vector3.Cross(prev_diff_vector, diff_vector);
-
                             if (cross.z > 0)
                             {
                                 FireRotateEvent(angle, RotationDirections.CCW);
-                                Debug.Log($"Rotate Counter Cw{angle}");
                             }
 
                             else if (cross.z < 0)
                             {
                                 FireRotateEvent(angle, RotationDirections.CW);
-                                Debug.Log($"Rotate CW {angle}");
                             }
                         }
 
-                        if (Mathf.Abs(currDistance - prevDistance) >= (_spreadProperty.MinDistanceChange * Screen.dpi))
+                        if (Mathf.Abs(currDistance - prevDistance) >=
+                            (_spreadProperty.MinDistanceChange * Screen.dpi))
                         {
-                            Debug.Log("Firing spread ev");
                             FireSpreadEvent(currDistance - prevDistance);
                         }
-
-                        processingTouch = false;
-                        Debug.Log(processingTouch);
                     }
                 }
             }
+            
         }
     }
 
@@ -344,15 +342,25 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     /// <param name="note">Note to spawn</param>
     public void AddHistoryNote(Notes note)
     {
-        processingTouch = false;
-        if (HistorySequence.Count < currLimit)
+        /// <summary>
+        /// Detect time since last note was spawn and if it's not greater than the max do not spawn ordered note.
+        /// Logic issue: "clamping" the input can be replaced instead by "sanitizing" the input;
+        /// taking only one input within a given time (not via banning inputs, but by selectively interpreting them)
+        /// </summary>
+
+        if (noteSpawnTimer >= noteInterval)
         {
-            HistorySequence.Add(note);
+            if (HistorySequence.Count < currLimit)
+            {
+                HistorySequence.Add(note);
 
-            GameObject spawn = NoteScript.SpawnNote(NotePrefab, Sequence_History, note);
-            currentNotes_History.Add(spawn);
+                GameObject spawn = NoteScript.SpawnNote(NotePrefab, Sequence_History, note);
+                currentNotes_History.Add(spawn);
 
-            CheckLastNoteMatch();
+                CheckLastNoteMatch();
+            }
+
+            noteSpawnTimer = 0.0f;
         }
     }
 
@@ -501,32 +509,27 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
         if (args.Direction == Directions.UP)
         {
             //Create the note based on the swipe direction
-            Debug.Log("Up");
             AddHistoryNote(Notes.SWIPE_UP);
         }
 
         else if (args.Direction == Directions.DOWN)
         {
-            Debug.Log("Down");
             AddHistoryNote(Notes.SWIPE_DOWN);
         }
 
         else if (args.Direction == Directions.LEFT)
         {
-            Debug.Log("Left");
             AddHistoryNote(Notes.SWIPE_LEFT);
         }
 
         else if (args.Direction == Directions.RIGHT)
         {
-            Debug.Log("Right");
             AddHistoryNote(Notes.SWIPE_RIGHT);
         }
     }
 
     public void OnPinchSpread(SpreadEventArgs args)
     {
-        Debug.Log("Pinch/Spread detected");
         //TODO:Convert to Tern
         if (args.DistanceDiff > 0)
         {
@@ -632,17 +635,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     //Procc pucker
     private void FireSpreadEvent(float dist_diff)
     {
-        //TODO: Convert to tern
-        if (dist_diff > 0)
-        {
-            Debug.Log("Spread");
-        }
-
-        else
-        {
-            Debug.Log("Pinch");
-        }
-
         Vector2 midPoint = GetMidPoint(aFingerTouch.position, bFingerTouch.position);
 
         GameObject hitObj = GetHit(midPoint);
@@ -675,8 +667,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
     //TODO: Program shake
     private void Shakeys()
     {
-        Debug.Log("Your takeout is here");
-
         if (!hasShakeys)
         {
             ClearHistoryNotes();
