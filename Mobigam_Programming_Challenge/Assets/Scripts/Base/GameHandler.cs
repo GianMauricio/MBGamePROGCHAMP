@@ -181,7 +181,6 @@ public class GameHandler : MonoBehaviour, ISwiped, IPinchSpread, IRotate
             CurrentTime += Time.fixedDeltaTime;
             noteSpawnTimer += Time.deltaTime;
 
-            Debug.Log("Time till next note: " + (noteInterval - noteSpawnTimer));
             //TODO: Convert to tern
             if (CurrentTime >= tapTimer)
             {
